@@ -13,7 +13,7 @@ logger.setLevel(logging.DEBUG)
 
 def lambda_handler(event, context):
     # TODO implement
-    # This is from CODE BUILD
+    # This is from CODE BUILD 2
     
     logger.debug(f"[USER][EVENT] {event}")
     
