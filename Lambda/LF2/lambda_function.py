@@ -40,7 +40,7 @@ def lambda_handler(event, context):
     # a1["labels"] = labels
     # logger.debug(a1)
 
-    # This is from codebuild 2
+    # This is from codebuild 3
     logger.debug(event)
     logger.debug(context)
     
