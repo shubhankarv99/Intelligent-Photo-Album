@@ -39,6 +39,8 @@ def lambda_handler(event, context):
     # a1["createdTimestamp"] = str(datetime.now())
     # a1["labels"] = labels
     # logger.debug(a1)
+
+    # This is from codebuild
     logger.debug(event)
     logger.debug(context)
     
