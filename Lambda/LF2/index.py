@@ -13,7 +13,7 @@ def lambda_handler(event, context):
     logger.debug(f"[USER][EVENT] {event}")
     logger.debug(f"[USER][CONTEXT] {context}")
     
-    host = 'https://search-search-e5d4d2j4gchfin6rbqcbxk4sjq.us-east-1.es.amazonaws.com'
+    host = 'https://search-search-cf-7ochiafkyifi227dwioysmofsm.us-east-1.es.amazonaws.com'
     master_user = "test"
     master_password = "Test@1234"
     
@@ -43,11 +43,11 @@ def lambda_handler(event, context):
     r = requests.get(url, auth=(master_user, master_password)) 
     data = json.loads(r.text)
 
-    logger.debug(f"[USER][OPENSEARCH] {response}")
+    logger.debug(f"[USER][OPENSEARCH] {data}")
     
     image_names = []
     for doc in data['hits']['hits']:
-        image_names.append("https://cc-b2.s3.amazonaws.com/" + doc['_source']['objectKey'])
+        image_names.append(f"https://{doc['_source']['bucket']}.s3.amazonaws.com/" + doc['_source']['objectKey'])
     
     # s3 = boto3.resource('s3')
     # obj = s3.Object(bucket, key)

@@ -45,7 +45,7 @@ def lambda_handler(event, context):
     a1["labels"] = labels
     logger.debug(f"[USER][ES JSON] {a1}")
     
-    host = 'https://search-search-e5d4d2j4gchfin6rbqcbxk4sjq.us-east-1.es.amazonaws.com'
+    host = 'https://search-search-cf-7ochiafkyifi227dwioysmofsm.us-east-1.es.amazonaws.com'
     _index = 'photos'
     _type = 'Photo'
     _id = uuid.uuid1().hex
