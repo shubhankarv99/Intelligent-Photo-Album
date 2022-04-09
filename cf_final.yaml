@@ -26,7 +26,7 @@ Parameters:
   codebucket:
     Description: Name of the bucket in which code resides.
     Type: String
-    Default: lambda-code-cc-cf
+    Default: lambda-code-cc
   lf1key:
     Description: Key of LF1 deployment package{zip file containing code}.
     Type: String
@@ -56,98 +56,169 @@ Parameters:
     Default: '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'
     NoEcho: true
 Resources:
-  # Frontent code pipeline
-  artifactbucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      BucketName: !Ref codebucket
+  # # Frontent code pipeline
+  # artifactbucket:
+  #   Type: AWS::S3::Bucket
+  #   Properties:
+  #     BucketName: !Ref codebucket
 
 
-  frontendbucket:
-    Type: AWS::S3::Bucket
-    Properties:
-      AccessControl: PublicRead
-      WebsiteConfiguration:
-        IndexDocument: index.html
+  # frontendbucket:
+  #   Type: AWS::S3::Bucket
+  #   Properties:
+  #     AccessControl: PublicRead
+  #     WebsiteConfiguration:
+  #       IndexDocument: index.html
 
-  frontentbucketpolicy:
-    Type: AWS::S3::BucketPolicy
-    Properties:
-      Bucket: !Ref frontendbucket
-      PolicyDocument:
-        Version: 2012-10-17
-        Statement:
-          - Sid: PublicReadForGetBucketObjects
-            Effect: Allow
-            Principal: '*'
-            Action: 's3:GetObject'
-            Resource: !Join
-              - ''
-              - - 'arn:aws:s3:::'
-                - !Ref frontendbucket
-                - /*
-    DependsOn: frontendbucket
+  # frontentbucketpolicy:
+  #   Type: AWS::S3::BucketPolicy
+  #   Properties:
+  #     Bucket: !Ref frontendbucket
+  #     PolicyDocument:
+  #       Version: 2012-10-17
+  #       Statement:
+  #         - Sid: PublicReadForGetBucketObjects
+  #           Effect: Allow
+  #           Principal: '*'
+  #           Action: 's3:GetObject'
+  #           Resource: !Join
+  #             - ''
+  #             - - 'arn:aws:s3:::'
+  #               - !Ref frontendbucket
+  #               - /*
+  #   DependsOn: frontendbucket
 
-  frontendpipelines3role:
-    Type: AWS::IAM::Role
-    Properties:
-      AssumeRolePolicyDocument:
-        Version: '2012-10-17'
-        Statement:
-          - Effect: Allow
-            Principal:
-              Service:
-                - codepipeline.amazonaws.com
-            Action:
-              - 'sts:AssumeRole'
-      Description: 'Role for codepipeline to access S3'
-      ManagedPolicyArns:
-        - arn:aws:iam::aws:policy/AdministratorAccess
+  # frontendpipelines3role:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     AssumeRolePolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             Service:
+  #               - codepipeline.amazonaws.com
+  #           Action:
+  #             - 'sts:AssumeRole'
+  #     Description: 'Role for codepipeline to access S3'
+  #     ManagedPolicyArns:
+  #       - arn:aws:iam::aws:policy/AdministratorAccess
   
 
-  frontendcodepipelines3:
-    Type: AWS::CodePipeline::Pipeline
-    Properties:
-      ArtifactStore:
-        Location: !Ref artifactbucket
-        Type: S3
-      RestartExecutionOnUpdate: False
-      RoleArn: !GetAtt frontendpipelines3role.Arn
-      Stages:
-        - Name: Source
-          Actions:
-            - Name: Source
-              ActionTypeId:
-                Category: Source
-                Owner: ThirdParty
-                Provider: GitHub
-                Version: 1
-              Configuration:
-                {
-                  'Owner': !Ref GitHubOwner,
-                  'Repo': !Ref GitHubRepo,
-                  'Branch': !Ref GitHubBranch,
-                  'OAuthToken': !Ref GitHubOAuthToken,
-                }
-              OutputArtifacts:
-                - Name: 'ai-app'
-              Region: us-east-1
-        - Name: Deploy
-          Actions:
-            - Name: Deploy
-              ActionTypeId:
-                Category: Deploy
-                Owner: AWS
-                Provider: S3
-                Version: 1
-              Configuration:
-                {
-                  'BucketName': { 'Ref': 'frontendbucket' },
-                  'Extract': True,
-                }
-              InputArtifacts:
-                - Name: 'ai-app'
-              Region: us-east-1
+  # frontendcodepipelines3:
+  #   Type: AWS::CodePipeline::Pipeline
+  #   Properties:
+  #     ArtifactStore:
+  #       Location: !Ref artifactbucket
+  #       Type: S3
+  #     RestartExecutionOnUpdate: False
+  #     RoleArn: !GetAtt frontendpipelines3role.Arn
+  #     Stages:
+  #       - Name: Source
+  #         Actions:
+  #           - Name: Source
+  #             ActionTypeId:
+  #               Category: Source
+  #               Owner: ThirdParty
+  #               Provider: GitHub
+  #               Version: 1
+  #             Configuration:
+  #               {
+  #                 'Owner': !Ref GitHubOwner,
+  #                 'Repo': !Ref GitHubRepo,
+  #                 'Branch': !Ref GitHubBranch,
+  #                 'OAuthToken': !Ref GitHubOAuthToken,
+  #               }
+  #             OutputArtifacts:
+  #               - Name: 'ai-app'
+  #             Region: us-east-1
+  #       - Name: Deploy
+  #         Actions:
+  #           - Name: Deploy
+  #             ActionTypeId:
+  #               Category: Deploy
+  #               Owner: AWS
+  #               Provider: S3
+  #               Version: 1
+  #             Configuration:
+  #               {
+  #                 'BucketName': { 'Ref': 'frontendbucket' },
+  #                 'Extract': True
+  #               }
+  #             InputArtifacts:
+  #               - Name: 'ai-app'
+  #             Region: us-east-1
+
+  # CodeBuildSourceCredential:
+  #   Type: AWS::CodeBuild::SourceCredential
+  #   Properties:
+  #     AuthType: PERSONAL_ACCESS_TOKEN
+  #     ServerType: GITHUB
+  #     Token: !Ref GitHubOAuthToken
+
+  # codebuildservicerole:
+  #   Type: AWS::IAM::Role
+  #   Properties:
+  #     AssumeRolePolicyDocument:
+  #       Version: '2012-10-17'
+  #       Statement:
+  #         - Effect: Allow
+  #           Principal:
+  #             Service:
+  #               - codebuild.amazonaws.com
+  #           Action:
+  #             - 'sts:AssumeRole'
+  #     Description: 'Role for codebuild'
+  #     ManagedPolicyArns:
+  #       - arn:aws:iam::aws:policy/AdministratorAccess
+
+  # codebuildlambda:
+  #   Type: AWS::CodeBuild::Project
+  #   Properties: 
+  #     Name: Test
+  #     Artifacts:
+  #       Type: NO_ARTIFACTS
+  #     Environment:
+  #       ComputeType: BUILD_GENERAL1_SMALL
+  #       Image: aws/codebuild/standard:4.0
+  #       Type: LINUX_CONTAINER
+  #     ServiceRole: !GetAtt codebuildservicerole.Arn
+  #     Source:
+  #       Auth:
+  #         Resource: !Ref CodeBuildSourceCredential
+  #         Type: OAUTH
+  #       BuildSpec: !Sub |
+  #         phases:
+  #           install:
+  #             runtime-versions:
+  #               python: 3.8
+  #             commands:
+  #               - echo "Installing dependencies..."
+  #               - pip install requests -t lib
+  #           build:
+  #             commands:
+  #               - echo "Zipping deployment package..."
+  #               - cd lib
+  #               - zip -r9 ../deployment_package_1.zip .
+  #               - zip -r9 ../deployment_package_2.zip .
+  #               - cd ..
+  #               - zip -r -j deployment_package_1.zip "Lambda/LF1/lambda_function.py"
+  #               - zip -r -j deployment_package_2.zip "Lambda/LF2/lambda_function.py"
+  #           post_build:
+  #             commands:
+  #               - echo "Updating lambda Function..."
+  #               - aws lambda update-function-code --function-name ${lf1name} --zip-file fileb://deployment_package_1.zip
+  #               - aws lambda update-function-code --function-name ${lf2name} --zip-file fileb://deployment_package_2.zip
+  #               - echo "DONE!!"
+
+  #       Location: https://github.com/aniketbote/cc-assignment-2.git
+  #       Type: GITHUB
+  #     WebhookFilter:
+  #       Pattern: PUSH
+  #       Type: EVENT
+
+
+
 
   # # Architecture
   # ccbucket2:
@@ -224,76 +295,76 @@ Resources:
   #     SourceAccount: !Ref "AWS::AccountId"
   #     SourceArn: !Sub "arn:aws:s3:::${ccbucketname}"
   
-  # lf1:
-  #   Type: AWS::Lambda::Function
-  #   Properties: 
-  #     Code: 
-  #       S3Bucket: !Ref codebucket
-  #       S3Key: !Ref lf1key
-  #     FunctionName: !Ref lf1name
-  #     Role: !GetAtt lf1role.Arn
-  #     Runtime: python3.8
-  #     Timeout: 15
-  #     Handler: lambda_function.lambda_handler
-  #   DependsOn: lf1role
+  lf1:
+    Type: AWS::Lambda::Function
+    Properties: 
+      Code: 
+        S3Bucket: !Ref codebucket
+        S3Key: !Ref lf1key
+      FunctionName: !Ref lf1name
+      Role: !GetAtt lf1role.Arn
+      Runtime: python3.8
+      Timeout: 15
+      Handler: lambda_function.lambda_handler
+    DependsOn: lf1role
   
-  # lf1role:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #         Effect: Allow
-  #         Principal: {Service: [lambda.amazonaws.com]}
-  #         Action: ['sts:AssumeRole']
-  #     Path: /
-  #     ManagedPolicyArns:
-  #     - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  #     - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
-  #     - "arn:aws:iam::aws:policy/AmazonRekognitionFullAccess"
-  # lf1log:
-  #   Type: 'AWS::Logs::LogGroup'
-  #   Properties:
-  #     LogGroupName: !Join
-  #       - ''
-  #       - - '/aws/lambda/'
-  #         - !Ref lf1
-  #   DependsOn: lf1
+  lf1role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Effect: Allow
+          Principal: {Service: [lambda.amazonaws.com]}
+          Action: ['sts:AssumeRole']
+      Path: /
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      - "arn:aws:iam::aws:policy/AmazonS3FullAccess"
+      - "arn:aws:iam::aws:policy/AmazonRekognitionFullAccess"
+  lf1log:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join
+        - ''
+        - - '/aws/lambda/'
+          - !Ref lf1
+    DependsOn: lf1
 
-  # lf2:
-  #   Type: AWS::Lambda::Function
-  #   Properties: 
-  #     Code: 
-  #       S3Bucket: !Ref codebucket
-  #       S3Key: !Ref lf2key
-  #     FunctionName: !Ref lf2name
-  #     Role: !GetAtt lf2role.Arn
-  #     Runtime: python3.8
-  #     Timeout: 15
-  #     Handler: lambda_function.lambda_handler
-  #   DependsOn: lf2role
+  lf2:
+    Type: AWS::Lambda::Function
+    Properties: 
+      Code: 
+        S3Bucket: !Ref codebucket
+        S3Key: !Ref lf2key
+      FunctionName: !Ref lf2name
+      Role: !GetAtt lf2role.Arn
+      Runtime: python3.8
+      Timeout: 15
+      Handler: lambda_function.lambda_handler
+    DependsOn: lf2role
   
-  # lf2role:
-  #   Type: AWS::IAM::Role
-  #   Properties:
-  #     AssumeRolePolicyDocument:
-  #       Version: '2012-10-17'
-  #       Statement:
-  #         Effect: Allow
-  #         Principal: {Service: [lambda.amazonaws.com]}
-  #         Action: ['sts:AssumeRole']
-  #     Path: /
-  #     ManagedPolicyArns:
-  #     - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
-  #     - "arn:aws:iam::aws:policy/AmazonLexFullAccess"
-  # lf2log:
-  #   Type: 'AWS::Logs::LogGroup'
-  #   Properties:
-  #     LogGroupName: !Join
-  #       - ''
-  #       - - '/aws/lambda/'
-  #         - !Ref lf2
-  #   DependsOn: lf2
+  lf2role:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          Effect: Allow
+          Principal: {Service: [lambda.amazonaws.com]}
+          Action: ['sts:AssumeRole']
+      Path: /
+      ManagedPolicyArns:
+      - "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+      - "arn:aws:iam::aws:policy/AmazonLexFullAccess"
+  lf2log:
+    Type: 'AWS::Logs::LogGroup'
+    Properties:
+      LogGroupName: !Join
+        - ''
+        - - '/aws/lambda/'
+          - !Ref lf2
+    DependsOn: lf2
   
   # aiapigateway:
   #   Type: AWS::ApiGateway::RestApi
@@ -341,6 +412,77 @@ Resources:
   #     Description: The v1 deployment of search photos
   #     RestApiId: !Ref aiapigateway
   #     StageName: v1
+
+  # CodeBuildSourceCredential:
+  #   Type: AWS::CodeBuild::SourceCredential
+  #   Properties:
+  #     AuthType: PERSONAL_ACCESS_TOKEN
+  #     ServerType: GITHUB
+  #     Token: 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
+
+  codebuildservicerole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service:
+                - codebuild.amazonaws.com
+            Action:
+              - 'sts:AssumeRole'
+      Description: 'Role for codebuild'
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AdministratorAccess
+
+  codebuildlambda:
+    Type: AWS::CodeBuild::Project
+    Properties: 
+      Name: Test
+      Artifacts:
+        Type: NO_ARTIFACTS
+      Environment:
+        ComputeType: BUILD_GENERAL1_SMALL
+        Image: aws/codebuild/standard:4.0
+        Type: LINUX_CONTAINER
+      ServiceRole: !GetAtt codebuildservicerole.Arn
+      Source:
+        # Auth:
+        #   Resource: !Ref CodeBuildSourceCredential
+        #   Type: OAUTH
+        BuildSpec: !Sub |
+          version: 0.2
+          phases:
+            install:
+              runtime-versions:
+                python: 3.8
+              commands:
+                - echo "Installing dependencies..."
+                - pip install requests -t lib
+            build:
+              commands:
+                - echo "Zipping deployment package..."
+                - cd lib
+                - zip -r9 ../deployment_package_1.zip .
+                - zip -r9 ../deployment_package_2.zip .
+                - cd ..
+                - zip -r -j deployment_package_1.zip "Lambda/LF1/lambda_function.py"
+                - zip -r -j deployment_package_2.zip "Lambda/LF2/lambda_function.py"
+            post_build:
+              commands:
+                - echo "Updating lambda Function..."
+                - aws lambda update-function-code --function-name ${lf1name} --zip-file fileb://deployment_package_1.zip
+                - aws lambda update-function-code --function-name ${lf2name} --zip-file fileb://deployment_package_2.zip
+                - echo "DONE!!"
+
+        Location: https://github.com/aniketbote/cc-assignment-2.git
+        Type: GITHUB
+      Triggers:
+        Webhook: True
+        FilterGroups:
+        - - Type: EVENT
+            Pattern: PUSH
 
 
 
