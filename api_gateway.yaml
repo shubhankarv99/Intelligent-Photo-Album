@@ -118,7 +118,7 @@ paths:
             $ref: "#/definitions/Error"
       x-amazon-apigateway-integration:
         type: "aws"
-        credentials: "arn:aws:iam::227712325985:role/test1-apigateways3role-1ERKJXHUK4Z7G"
+        credentials: "arn:aws:iam::227712325985:role/test1-apigateways3role-HULURUULC6LX"
         httpMethod: "PUT"
         uri: "arn:aws:apigateway:us-east-1:s3:path/{bucket}/{key}"
         responses:
