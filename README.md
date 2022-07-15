@@ -18,6 +18,6 @@ through both text and voice
 ### Architecture:
 
 <p align="center">
-  <img src="Architecture.jpg" width="600" title="Architecture">
+  <img src="Architecture.PNG" width="600" title="Architecture">
 </p>
 
