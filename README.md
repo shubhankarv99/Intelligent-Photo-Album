@@ -29,11 +29,12 @@ through both text and voice
 - Change the parameters of stack_1.yaml to appropriate values
   - Can be done by changing default value or can be changed in aws.(AWS asks you these parameter before deploying cloudformation)
 - Run stack_1.yaml in AWS cloudformation
-- Once that is successfull created run the python code "update_api_gateway.py"
+- Once that is successfully created, run the python code "update_api_gateway.py"
   - boto3 credential should be setup and required packages must be installed
-- After the code runs without any error change parameters in stack_2.yaml
+- After the code runs without any error, change parameters in stack_2.yaml
   - codebucket value(stack2) = artifactname value(stack1)
   - lf2name value(stack2) = lf2name value(stack1)
+- Run stack_2.yaml in AWScloudformation
 - After succesfully implementing all, your system is live.
 - Download the javasript sdk from api gateway and replace the one in website_v2.
 - Test the website locally. 
