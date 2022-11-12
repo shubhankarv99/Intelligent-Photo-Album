@@ -35,6 +35,9 @@ Parameters:
     Type: String
     Default: cc-assignment-2
     AllowedPattern: '[A-Za-z0-9-]+'
+  GitHubLink:
+    Type: String
+    Default: https://github.com/aniketbote/Intelligent-Photo-Album.git
   GitHubBranch:
     Type: String
     Default: master
@@ -307,7 +310,7 @@ Resources:
                 - aws lambda update-function-code --function-name ${lf2name} --zip-file fileb://deployment_package_2.zip
                 - echo "DONE!!"
 
-        Location: https://github.com/aniketbote/cc-assignment-2.git
+        Location: !Ref GitHubLink
         Type: GITHUB
       Triggers:
         Webhook: True
