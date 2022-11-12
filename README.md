@@ -37,6 +37,7 @@ through both text and voice
 - Run stack_2.yaml in AWScloudformation
 - After succesfully implementing all, your system is live.
 - Download the javasript sdk from api gateway and replace the one in website_v2.
+- Change bucket name in index.js(line 112) to ccbucketname value(stack1)
 - Test the website locally. 
 - If it works push the changes to remote repository and the changes will be automatically reflected in hosted website inside S3 bucket.
 
