@@ -2,42 +2,42 @@ Parameters:
   ccbucketname:
     Description: The name of the S3 bucket to be created.
     Type: String
-    Default: cc-b2-cf
+    Default: b2-assignment-2
   lf1name:
     Description: The name of the lf1 lambda function to be created.
     Type: String
-    Default: lf1-cf
+    Default: index-photos
   lf2name:
     Description: The name of the lf2 lambda function to be created.
     Type: String
-    Default: lf2-cf
+    Default: search-photos
   domainname:
     Description: The name of the opensearch domain
     Type: String
-    Default: search-cf
+    Default: photos
   masterusername:
     Description: Username for opensearch.
     Type: String
-    Default: test
+    Default: sv2229
   masterpassword:
     Description: Password for opensearch.
     Type: String
-    Default: Test@1234
+    Default: Internet@1122
   artifactname:
     Description: Name of the bucket in which code resides.
     Type: String
-    Default: lambda-code-cc-cf
+    Default: b1-photo-album
   GitHubOwner:
     Type: String
-    Default: aniketbote
+    Default: shubhankarv99
     AllowedPattern: '[A-Za-z0-9-]+'
   GitHubRepo:
     Type: String
-    Default: cc-assignment-2
+    Default: Intelligent-Photo-Album
     AllowedPattern: '[A-Za-z0-9-]+'
   GitHubLink:
     Type: String
-    Default: https://github.com/aniketbote/Intelligent-Photo-Album.git
+    Default: https://github.com/shubhankarv99/Intelligent-Photo-Album.git
   GitHubBranch:
     Type: String
     Default: master
