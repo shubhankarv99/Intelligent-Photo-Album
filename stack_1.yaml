@@ -44,7 +44,7 @@ Parameters:
     AllowedPattern: '[A-Za-z0-9-]+'
   GitHubOAuthToken:
     Type: String
-    Default: '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'
+    Default: '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'
     NoEcho: true
 Resources:
   # Frontent code pipeline
